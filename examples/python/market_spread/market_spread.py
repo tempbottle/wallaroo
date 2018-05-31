@@ -142,7 +142,7 @@ class OrderResult(object):
 
 @wallaroo.encoder
 def order_result_encoder(data):
-    p = struct.pack(">HI6s4sddddQ",
+    p = struct.pack(">BI6s4sddddQ",
                     data.order.side,
                     data.order.account,
                     data.order.order_id,
