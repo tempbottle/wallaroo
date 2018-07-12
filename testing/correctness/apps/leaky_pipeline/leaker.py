@@ -40,7 +40,7 @@ class Buffer():
         self._items.append(thing)
         if len(self._items) > 100:
             print "returning items"
-            popped = deepcopy(self._items)
+            popped = deepcopy(self._items[0:52]) # change me to 53
             self._items = []
             return popped
         else:
