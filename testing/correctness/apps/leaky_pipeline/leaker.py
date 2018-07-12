@@ -1,6 +1,7 @@
 from collections import namedtuple
 from copy import deepcopy
 import wallaroo
+import os
 
 def application_setup(args):
     in_host, in_port = wallaroo.tcp_parse_input_addrs(args)[0]
@@ -18,20 +19,25 @@ def application_setup(args):
 @wallaroo.state_computation(name="state1")
 def buffer_items(item, buffer):
     ret = buffer.update(item)
-    return (ret, True)
+    if ret:
+        print "stateful ran on %s"%(os.getpid())
+    return (ret, False)
 
 @wallaroo.computation(name="parallel")
-def p(item):
-    return item
+def p(x):
+    print "stateless ran on %s with %s items"%(
+        os.getpid(),len(x))
+    return x
 
 @wallaroo.decoder(header_length=4, length_fmt=">I")
 def decoder(line):
     line = line.decode("utf-8")
-    return line * 100
+    return(line * 100)
 
 @wallaroo.encoder
 def encoder(results):
-    return "%s"%(results)
+    print ("encoder ran on %s"%(os.getpid()))
+    return "NODE %s GOT %s results\n"%(os.getpid(), len(results))
 
 class Buffer():
     def __init__(self):
@@ -40,7 +46,8 @@ class Buffer():
         self._items.append(thing)
         if len(self._items) > 100:
             print "returning items"
-            popped = deepcopy(self._items[0:52]) # change me to 53
+#            popped = self._items[0:1] # change me to 53
+            popped = self._items[0:90]
             self._items = []
             return popped
         else:
