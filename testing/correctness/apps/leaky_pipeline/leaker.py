@@ -11,26 +11,14 @@ def application_setup(args):
     ab = wallaroo.ApplicationBuilder("Leaky pipe application")
     ab.new_pipeline("Leaky pipe", tcp_source)
     ab.to_stateful(buffer_items, Buffer, "buffer")
-    ab.to(one_to_many)
-#   Uncomment this to see things fail    
-#    ab.to_parallel(p)
+    ab.to_parallel(p)
     ab.to_sink(tcp_sink)
     return ab.build()
-
-State1 = namedtuple('State1', [])
 
 @wallaroo.state_computation(name="state1")
 def buffer_items(item, buffer):
     ret = buffer.update(item)
     return (ret, True)
-
-def s(item, state):
-    return (item, True)
-
-@wallaroo.computation(name="one-to-many")
-def one_to_many(items):
-    print "returning %s items"%(len(items))
-    return deepcopy(items)
 
 @wallaroo.computation(name="parallel")
 def p(item):
