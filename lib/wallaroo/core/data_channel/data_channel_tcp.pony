@@ -187,7 +187,7 @@ class DataChannelConnectNotifier is DataChannelNotify
       end
       try
         let expect = Bytes.to_u32(data(0)?, data(1)?, data(2)?, data(3)?).usize()
-
+        @printf[I32]("EXPECTING %d\n".cstring(), expect)
         conn.expect(expect)
         _header = false
       end
