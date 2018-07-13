@@ -26,7 +26,7 @@ def decoder(line):
     # Formula: stringlen*4 + 291
     # 4023 = 16383
     # 4024 = 16387 # HANGS
-    return('\x01' * 4023)
+    return('\x01' * 4024)
 
 @wallaroo.encoder
 def encoder(results):

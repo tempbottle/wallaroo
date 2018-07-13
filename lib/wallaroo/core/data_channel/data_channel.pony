@@ -593,12 +593,16 @@ actor DataChannel
     else
       if _expect > _read_buf_offset then
         let data = _read_buf = recover Array[U8] end
-        _read_buf.undefined(_next_size)
+        if _expect > _max_size then
+          _read_buf.undefined(_expect)
+        else
+          _read_buf.undefined(_next_size)
+        end
         for i in Range(0, _read_buf_offset) do
           try
             _read_buf.update(i, data(i)?)?
           else
-            Fail()
+            Unreachable()
           end
         end
       end
