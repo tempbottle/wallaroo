@@ -5,12 +5,12 @@ SINK_PORT=6666
 N_WORKERS=2
 
 remove_resilience_files() {
-    rm -rf /tmp/leaker*
+    rm -rf /tmp/hanging*
 }
 
 start_leader(){
   N_WORKERS=$1
-  exec machida --application-module leaker \
+  ./leaky_pipeline \
     --in 0.0.0.0:$SOURCE_PORT \
     --out 127.0.0.1:$SINK_PORT \
     --metrics 127.0.0.1:5001 \
@@ -24,7 +24,7 @@ start_leader(){
 
 start_worker() {
   N=$1
-  exec machida --application-module leaker \
+  ./leaky_pipeline \
     --in 0.0.0.0:$((SOURCE_PORT+$N)) \
     --out 127.0.0.1:$SINK_PORT \
     --metrics 127.0.0.1:5001 \
@@ -42,7 +42,8 @@ start_cluster() {
   done
 }
 
-(killall -9 machida ; sleep 1)
+(killall -9 leaky_pipeline ; sleep 0.2)
+(killall -9 leaky_pipeline ; sleep 0.2)
 remove_resilience_files
 start_cluster
 
