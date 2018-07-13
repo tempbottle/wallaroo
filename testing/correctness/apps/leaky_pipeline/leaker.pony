@@ -60,7 +60,11 @@ primitive ConstDecoder is FramedSourceHandler[String]
 
   fun decode(data: Array[U8] val): String ? =>
     let x = data(0)?
-    let a = recover val Array[U8].init(1, 16384) end
+    let size: USize = 16085
+                            // fails with 16085 == EXPECTED 16385
+                            // works with 16084 == EXPECTED 16384
+                            // works with 16083 == EXPECTED 16383
+    let a = recover val Array[U8].init(1, size) end
     let s = String.from_array(a)
     @printf[I32]("decode ran\n".cstring())
     s
