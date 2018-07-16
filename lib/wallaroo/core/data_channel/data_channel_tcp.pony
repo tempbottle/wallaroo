@@ -181,6 +181,7 @@ class DataChannelConnectNotifier is DataChannelNotify
 
   fun ref received(conn: DataChannel ref, data: Array[U8] iso): Bool
   =>
+  @printf[I32]("Data size %d\n".cstring(), data.size())
     if _header then
       ifdef "trace" then
         @printf[I32]("Rcvd msg header on data channel\n".cstring())
@@ -204,6 +205,7 @@ class DataChannelConnectNotifier is DataChannelNotify
       | let data_msg: DataMsg =>
         ifdef "trace" then
           @printf[I32]("Received DataMsg on Data Channel\n".cstring())
+
         end
         _metrics_reporter.step_metric(data_msg.metric_name,
           "Before receive on data channel (network time)", data_msg.metrics_id,

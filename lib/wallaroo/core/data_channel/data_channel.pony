@@ -593,11 +593,32 @@ actor DataChannel
     else
       if _expect > _read_buf_offset then
         let data = _read_buf = recover Array[U8] end
+        @printf[I32](("Heres what we've got BEFORE RESIZE:\n"+
+        "\t_max_size:     %d\n"+
+        "\t_expect:       %d\n"+
+        "\t_next_size:    %d\n"+
+        "\tdata.size():   %d\n"+
+        "\treadbufsize:   %d\n"+
+        "\treadbufoffset: %d\n"+
+        "\treadbufspace:  %d\n").cstring(),
+        _max_size, _expect, _next_size, data.size(),
+        _read_buf.size(), _read_buf_offset, _read_buf.space())
         if _expect > _max_size then
           _read_buf.undefined(_expect)
         else
           _read_buf.undefined(_next_size)
         end
+        @printf[I32](("Heres what we've got AFTERRESIZE:\n"+
+        "\t_max_size:     %d\n"+
+        "\t_expect:       %d\n"+
+        "\t_next_size:    %d\n"+
+        "\tdata.size():   %d\n"+
+        "\treadbufsize:   %d\n"+
+        "\treadbufoffset: %d\n"+
+        "\treadbufspace:  %d\n").cstring(),
+        _max_size, _expect, _next_size, data.size(),
+        _read_buf.size(), _read_buf_offset, _read_buf.space())
+
         for i in Range(0, _read_buf_offset) do
           try
             _read_buf.update(i, data(i)?)?
@@ -642,7 +663,8 @@ actor DataChannel
             _reading = false
             return
           end
-
+          @printf[I32]("LOOP Buffer offset %d\n".cstring(), _read_buf_offset)
+          @printf[I32]("LOOP Buffer expect %d\n".cstring(), _expect)
           if (_read_buf_offset >= _expect) and (_read_buf_offset != 0) then
             if (_expect == 0) and (_read_buf_offset > 0) then
               let data = _read_buf = recover Array[U8] end
@@ -665,9 +687,15 @@ actor DataChannel
               end
             else
               while _read_buf_offset >= _expect do
+                @printf[I32]("WHILELOOP Buffer offset %d\n".cstring(), _read_buf_offset)
+                @printf[I32]("WHILELOOP Buffer expect %d\n".cstring(), _expect)
+                @printf[I32]("WHILELOOP Buffer size %d\n".cstring(), _read_buf.size())
+
                 let x = _read_buf = recover Array[U8] end
                 (let data, _read_buf) = (consume x).chop(_expect)
                 _read_buf_offset = _read_buf_offset - _expect
+
+                @printf[I32]("WHILELOOP AFTER Buffer size %d\n".cstring(), _read_buf.size())
 
                 // increment max reads
                 received_count = received_count + 1
@@ -703,6 +731,7 @@ actor DataChannel
                 _event,
                 _read_buf.cpointer(_read_buf_offset),
                 _read_buf.space() - _read_buf_offset) ?
+              @printf[I32]("LEN is %d\n".cstring(), len)
 
               match len
               | 0 =>
@@ -850,4 +879,3 @@ actor DataChannel
       _throttled = false
       _notify.unthrottled(this)
     end
-
