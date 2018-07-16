@@ -133,7 +133,7 @@ actor TCPSink is Consumer
     recovering: Bool, env: Env, encoder_wrapper: TCPEncoderWrapper,
     metrics_reporter: MetricsReporter iso, host: String, service: String,
     initial_msgs: Array[Array[ByteSeq] val] val,
-    from: String = "", init_size: USize = 64, max_size: USize = 16384,
+    from: String = "", init_size: USize = 64, max_size: USize = 65536,
     reconnect_pause: U64 = 10_000_000_000)
   =>
     """

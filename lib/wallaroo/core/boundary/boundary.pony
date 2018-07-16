@@ -154,7 +154,7 @@ actor OutgoingBoundary is Consumer
 
   new create(auth: AmbientAuth, worker_name: String, target_worker: String,
     metrics_reporter: MetricsReporter iso, host: String, service: String,
-    from: String = "", init_size: USize = 64, max_size: USize = 16384,
+    from: String = "", init_size: USize = 64, max_size: USize = 65536,
     spike_config:(SpikeConfig | None) = None)
   =>
     """

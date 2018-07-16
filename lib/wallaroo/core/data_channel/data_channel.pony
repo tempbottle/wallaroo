@@ -82,7 +82,7 @@ actor DataChannel
 
   new create(auth: DataChannelAuth, notify: DataChannelNotify iso,
     host: String, service: String, from: String = "", init_size: USize = 64,
-    max_size: USize = 16384)
+    max_size: USize = 65536)
   =>
     """
     Connect via IPv4 or IPv6. If `from` is a non-empty string, the connection
@@ -99,7 +99,7 @@ actor DataChannel
 
   new ip4(auth: DataChannelAuth, notify: DataChannelNotify iso,
     host: String, service: String, from: String = "", init_size: USize = 64,
-    max_size: USize = 16384)
+    max_size: USize = 65536)
   =>
     """
     Connect via IPv4.
@@ -115,7 +115,7 @@ actor DataChannel
 
   new ip6(auth: DataChannelAuth, notify: DataChannelNotify iso,
     host: String, service: String, from: String = "", init_size: USize = 64,
-    max_size: USize = 16384)
+    max_size: USize = 65536)
   =>
     """
     Connect via IPv6.
@@ -130,7 +130,7 @@ actor DataChannel
     _notify_connecting()
 
   new _accept(listen: DataChannelListener, notify: DataChannelNotify iso,
-    fd: U32, init_size: USize = 64, max_size: USize = 16384)
+    fd: U32, init_size: USize = 64, max_size: USize = 65536)
   =>
     """
     A new connection accepted on a server.

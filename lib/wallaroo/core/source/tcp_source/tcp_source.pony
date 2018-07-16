@@ -108,7 +108,7 @@ actor TCPSource is (Producer & InFlightAckResponder & StatusReporter)
     routes: Array[Consumer] val, route_builder: RouteBuilder,
     outgoing_boundary_builders: Map[String, OutgoingBoundaryBuilder] val,
     layout_initializer: LayoutInitializer,
-    fd: U32, init_size: USize = 64, max_size: USize = 16384,
+    fd: U32, init_size: USize = 64, max_size: USize = 65536,
     metrics_reporter: MetricsReporter iso, router_registry: RouterRegistry)
   =>
     """

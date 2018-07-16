@@ -74,7 +74,7 @@ actor TCPSourceListener is SourceListener
     metrics_reporter: MetricsReporter iso,
     target_router: Router = EmptyRouter,
     host: String = "", service: String = "0", limit: USize = 0,
-    init_size: USize = 64, max_size: USize = 16384)
+    init_size: USize = 64, max_size: USize = 65536)
   =>
     """
     Listens for both IPv4 and IPv6 connections.
